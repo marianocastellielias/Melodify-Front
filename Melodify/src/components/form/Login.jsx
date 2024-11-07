@@ -7,33 +7,26 @@ const Login = () => {
     const { handleLogin } = useContext(AuthenticationContext);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState(null); // Estado para manejar el mensaje de error
+    const [error, setError] = useState(null);
     const [loading, setLoading] = useState("");
     const navigate = useNavigate();
 
-    const emailHandler = (event) => {
-        setEmail(event.target.value);
-    }
-
-    const passwordHandler = (event) => {
-        setPassword(event.target.value);
-    }
+    const emailHandler = (event) => setEmail(event.target.value);
+    const passwordHandler = (event) => setPassword(event.target.value);
 
     const submitHandler = async (event) => {
         event.preventDefault();
         setLoading("Cargando...");
         setError(null);
 
-        const isAuthenticated = await handleLogin(email, password); 
+        const isAuthenticated = await handleLogin(email, password);
 
         if (isAuthenticated) {
             const token = localStorage.getItem("bookchampions-token");
             if (token) {
-                
-                const decodedToken = jwtDecode(token);
+                const decodedToken = jwtDecode(token); // Usa jwt_decode como import por defecto
                 const userRole = decodedToken.role;
 
-                
                 switch (userRole) {
                     case "Admin":
                         navigate("/admin-dashboard");
@@ -48,37 +41,23 @@ const Login = () => {
                         navigate("/login");
                         break;
                 }
-            
+            }
         } else {
             setLoading("");
-            setError("Credenciales incorrectas."); // Establecer el mensaje de error si falla
+            setError("Credenciales incorrectas.");
         }
-    }
-};
-    
+    };
 
     return (
         <form onSubmit={submitHandler}>
-            <input 
-                type="email" 
-                value={email} 
-                placeholder="Ingrese su email" 
-                onChange={emailHandler} 
-                required 
-            />
-            <input 
-                type="password" 
-                value={password} 
-                placeholder="Ingrese su contraseña" 
-                onChange={passwordHandler} 
-                required 
-            />
+            <input type="email" value={email} placeholder="Ingrese su email" onChange={emailHandler} required />
+            <input type="password" value={password} placeholder="Ingrese su contraseña" onChange={passwordHandler} required />
             <button type="submit">Iniciar Sesión</button>
             <h4>{loading}</h4>
-            {error && <p style={{ color: 'red' }}>{error}</p>} 
+            {error && <p style={{ color: 'red' }}>{error}</p>}
         </form>
     );
-}
-
+};
 
 export default Login;
+

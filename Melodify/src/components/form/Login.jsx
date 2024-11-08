@@ -1,7 +1,8 @@
 import { useState, useContext } from "react";
 import { AuthenticationContext } from "../services/authentication/AuthenticationContext";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
+//import { jwtDecode } from "jwt-decode";
+import Navbar from "../navbar/Navbar";
 
 const Login = () => {
     const { handleLogin } = useContext(AuthenticationContext);
@@ -18,29 +19,23 @@ const Login = () => {
         event.preventDefault();
         setLoading("Cargando...");
         setError(null);
-
-        const isAuthenticated = await handleLogin(email, password);
-
+    
+        const { isAuthenticated, decodedUser } = await handleLogin(email, password);
+    
         if (isAuthenticated) {
-            const token = localStorage.getItem("bookchampions-token");
-            if (token) {
-                const decodedToken = jwtDecode(token); 
-                const userRole = decodedToken.role;
-
-                switch (userRole) {
-                    case "Admin":
-                        navigate("/admin-dashboard");
-                        break;
-                    case "Artist":
-                        navigate("/artist-dashboard");
-                        break;
-                    case "Client":
-                        navigate("/client-dashboard");
-                        break;
-                    default:
-                        navigate("/login");
-                        break;
-                }
+            switch (decodedUser.role) {  // Usa decodedUser en lugar de user
+                case "Admin":
+                    navigate("/admin-dashboard");
+                    break;
+                case "Artist":
+                    navigate("/artist-dashboard");
+                    break;
+                case "Client":
+                    navigate("/client-dashboard");
+                    break;
+                default:
+                    navigate("/login");
+                    break;
             }
         } else {
             setLoading("");
@@ -48,19 +43,20 @@ const Login = () => {
         }
     };
 
-    const goToRegisterHandler = () => {
-        navigate("/register");
-    };
+    
 
     return (
+        <>
+        <Navbar showRegister={true} showHome={true} />
         <form onSubmit={submitHandler}>
             <input type="email" value={email} placeholder="Ingrese su email" onChange={emailHandler} required />
             <input type="password" value={password} placeholder="Ingrese su contraseña" onChange={passwordHandler} required />
             <button type="submit">Iniciar Sesión</button>
             <h4>{loading}</h4>
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            <button type="button" onClick={goToRegisterHandler}>Crear una cuenta</button>
+            
         </form>
+        </>
     );
 };
 

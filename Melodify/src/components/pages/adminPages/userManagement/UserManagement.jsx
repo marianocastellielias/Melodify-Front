@@ -1,9 +1,9 @@
 import { useEffect, useState, useContext } from "react";
 import { AuthenticationContext } from "../../../services/authentication/AuthenticationContext";
-import { useNavigate } from "react-router-dom";
+import Navbar from "../../../navbar/Navbar";
 
 const UserManagement = () => {
-    const { user, handleLogout } = useContext(AuthenticationContext);
+    const { user } = useContext(AuthenticationContext);
     const [users, setUsers] = useState([]);
     const [error, setError] = useState(null);
     const [newUser, setNewUser] = useState({
@@ -13,20 +13,8 @@ const UserManagement = () => {
         phone: "",
         password: ""
     });
-    const navigate = useNavigate();
 
-    const logoutHandler = () => {
-        handleLogout();
-        navigate("/login");
-    };
 
-    const goToAlbumManagementHandler = () => {
-        navigate("/admin/album-management");
-    };
-
-    const goToDashboard = () => {
-        navigate("/admin-dashboard");
-    }
 
     const fetchUsers = async () => {
         const token = localStorage.getItem("bookchampions-token");
@@ -147,9 +135,8 @@ const UserManagement = () => {
 
     return (
         <div className="user-management">
-            <button type="button" onClick={goToDashboard}>Inicio</button>
-            <button onClick={logoutHandler}>Cerrar Sesión</button>
-            <button type="button" onClick={goToAlbumManagementHandler}>Gestión de Álbumes</button>
+            <Navbar showHome = {true} showAlbumManagement = {true} showLogout = {true} />
+
             <form onSubmit={(e) => { e.preventDefault(); createUser(); }}>
                 <input
                     type="text"

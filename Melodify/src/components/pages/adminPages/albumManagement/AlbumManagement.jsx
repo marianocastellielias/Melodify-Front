@@ -1,26 +1,11 @@
 import { useEffect, useState, useContext } from "react";
 import { AuthenticationContext } from "../../../services/authentication/AuthenticationContext";
-import { useNavigate } from "react-router-dom";
+import Navbar from "../../../navbar/Navbar";
 
 const AlbumManagement = () => {
-    const { user, handleLogout } = useContext(AuthenticationContext);
+    const { user } = useContext(AuthenticationContext);
     const [albums, setAlbums] = useState([]);
     const [error, setError] = useState(null);
-
-    const navigate = useNavigate();
-
-    const logoutHandler = () => {
-        handleLogout();
-        navigate("/login");
-    };
-
-    const goToUserManagementHandler = () => {
-        navigate("/admin/user-management");
-    };
-
-    const goToDashboard = () => {
-        navigate("/admin-dashboard");
-    }
 
     const fetchAlbums = async () => {
         const token = localStorage.getItem("bookchampions-token");
@@ -96,10 +81,10 @@ const AlbumManagement = () => {
     }
 
     return (
+        <>
+        <Navbar showHome = {true} showUserManagement = {true} showLogout = {true} />
         <div className="albums-list">
-            <button type="button" onClick={goToDashboard}>Inicio</button>
-            <button type="button" onClick={goToUserManagementHandler}>Gestión de Usuarios</button>
-            <button onClick={logoutHandler}>Cerrar Sesión</button>
+            
             <h2>Álbumes</h2>
             <div className="albums-container">
 
@@ -125,8 +110,8 @@ const AlbumManagement = () => {
                         </p>
                         <div>
                             <p>Cambiar estado del álbum:</p>
-                            <button onClick={() => updateAlbumState(album.id, true)}>Accepted</button>
-                            <button onClick={() => updateAlbumState(album.id, false)}>Rejected</button>
+                            <button onClick={() => updateAlbumState(album.id, true)}>Aceptado</button>
+                            <button onClick={() => updateAlbumState(album.id, false)}>Rechazado</button>
                             <button onClick={() => deleteAlbum(album.id)}>Eliminar álbum</button>
                         </div>
                         <hr />
@@ -136,6 +121,7 @@ const AlbumManagement = () => {
 
             </div>
         </div>
+        </>
     );
 };
 

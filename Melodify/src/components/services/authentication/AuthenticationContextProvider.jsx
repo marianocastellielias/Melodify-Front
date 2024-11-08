@@ -1,5 +1,5 @@
 import { useState } from "react";
-import PropType from "prop-types";
+import PropTypes from "prop-types";
 import { AuthenticationContext } from "./AuthenticationContext";
 import { jwtDecode } from "jwt-decode";
 
@@ -17,22 +17,22 @@ export const AuthenticationContextProvider = ({ children }) => {
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify({ email, password }),
             });
-
+    
             if (!res.ok) {
                 throw new Error("Credenciales incorrectas");
             }
-
+    
             const token = await res.text();
             localStorage.setItem("bookchampions-token", token);
-
+    
             const decodedUser = jwtDecode(token); 
             setUser(decodedUser);
             setError(null);
-            return true;
+            return { isAuthenticated: true, decodedUser };
         } catch (err) {
             console.error("Error de autenticación:", err);
             setError("Credenciales incorrectas. Por favor, intenta de nuevo.");
-            return false;
+            return { isAuthenticated: false };
         }
     };
 
@@ -50,6 +50,6 @@ export const AuthenticationContextProvider = ({ children }) => {
 };
 
 AuthenticationContextProvider.propTypes = {
-    children: PropType.node,
+    children: PropTypes.node,
 };
 

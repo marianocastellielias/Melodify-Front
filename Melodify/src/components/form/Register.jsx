@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../navbar/Navbar";
 
 const Register = () => {
     const [name, setName] = useState("");
@@ -60,6 +61,8 @@ const Register = () => {
     };
 
     return (
+        <>
+        <Navbar showHome={true} showLogin={true} />
         <form onSubmit={registerHandler}>
             <input
                 type="name"
@@ -103,6 +106,7 @@ const Register = () => {
             {error && <p style={{ color: 'red' }}>{error}</p>}
 
         </form>
+        </>
     );
 };
 

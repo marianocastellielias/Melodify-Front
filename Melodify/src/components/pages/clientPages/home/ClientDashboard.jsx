@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { AuthenticationContext } from "../../services/authentication/AuthenticationContext";
+import { AuthenticationContext } from "../../../services/authentication/AuthenticationContext";
 import { useNavigate } from "react-router-dom";
 
-const ArtistDashboard = () => {
+const ClientDashboard = () => {
     const { handleLogout } = useContext(AuthenticationContext);
     const navigate = useNavigate();
 
@@ -12,10 +12,10 @@ const ArtistDashboard = () => {
     };
     return(
     <div>
-      <h1>Ha iniciado sesión Artista</h1>  
+      <h1>Ha iniciado sesión Cliente</h1>  
       <button onClick={logoutHandler}>Cerrar Sesión</button>
     </div>
 )
 }
 
-export default ArtistDashboard;
+export default ClientDashboard;

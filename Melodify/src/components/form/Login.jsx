@@ -24,7 +24,7 @@ const Login = () => {
         if (isAuthenticated) {
             const token = localStorage.getItem("bookchampions-token");
             if (token) {
-                const decodedToken = jwtDecode(token); // Usa jwt_decode como import por defecto
+                const decodedToken = jwtDecode(token); 
                 const userRole = decodedToken.role;
 
                 switch (userRole) {
@@ -35,7 +35,7 @@ const Login = () => {
                         navigate("/artist-dashboard");
                         break;
                     case "Client":
-                        navigate("/");
+                        navigate("/client-dashboard");
                         break;
                     default:
                         navigate("/login");
@@ -48,6 +48,10 @@ const Login = () => {
         }
     };
 
+    const goToRegisterHandler = () => {
+        navigate("/register");
+    };
+
     return (
         <form onSubmit={submitHandler}>
             <input type="email" value={email} placeholder="Ingrese su email" onChange={emailHandler} required />
@@ -55,6 +59,7 @@ const Login = () => {
             <button type="submit">Iniciar Sesión</button>
             <h4>{loading}</h4>
             {error && <p style={{ color: 'red' }}>{error}</p>}
+            <button type="button" onClick={goToRegisterHandler}>Crear una cuenta</button>
         </form>
     );
 };

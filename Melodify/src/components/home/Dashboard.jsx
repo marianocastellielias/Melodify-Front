@@ -1,21 +1,25 @@
-import { useContext } from "react";
-import { AuthenticationContext } from "../services/authentication/AuthenticationContext";
+
 import { useNavigate } from "react-router-dom";
+import AlbumsList from "../albumList/AlbumList";
 
 const Dashboard = () => {
-    const { handleLogout } = useContext(AuthenticationContext);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const logoutHandler = () => {
-        handleLogout();
-        navigate("/login");
-    };
-    return(
+  const goToRegisterHandler = () => {
+    navigate("/register");
+  };
+  const goToLoginHandler = () => {
+    navigate("/login");
+  };
+
+  return (
     <div>
-      <h1>Ha iniciado sesión</h1>  
-      <button onClick={logoutHandler}>Cerrar Sesión</button>
+      <p>¡Bienvenido a Melodify! Inicie sesión o cree una cuenta para comprar su álbum favorito.</p>
+      <AlbumsList />
+      <button type="button" onClick={goToLoginHandler}>Iniciar sesión</button>
+      <button type="button" onClick={goToRegisterHandler}>Registrarse</button>
     </div>
-)
+  )
 }
 
 export default Dashboard;

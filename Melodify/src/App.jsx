@@ -2,9 +2,12 @@ import Login from './components/form/Login';
 import Register from './components/form/Register';
 import './App.css';
 import Dashboard from './components/home/Dashboard';
-import AdminDashboard from './components/adminPages/home/AdminDashboard';
-import ArtistDashboard from './components/artistPages/home/ArtistDashboard';
+import AdminDashboard from './components/pages/adminPages/home/AdminDashboard';
+import ArtistDashboard from './components/pages/artistPages/home/ArtistDashboard';
+import ClientDashboard from './components/pages/clientPages/home/ClientDashboard';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import AlbumManagement from './components/pages/adminPages/albumManagement/AlbumManagement';
+import UserManagement from './components/pages/adminPages/userManagement/UserManagement';
 
 function App() {
 
@@ -13,8 +16,10 @@ function App() {
     { path: "/login", element: <Login /> },
     { path: "/register", element: <Register />},
     { path: "/admin-dashboard", element: <AdminDashboard />},
-    { path: "/artist-dashboard", element: <ArtistDashboard />}
-
+    { path: "/admin/album-management", element: <AlbumManagement />},
+    {path: "/admin/user-management", element: <UserManagement />},
+    { path: "/artist-dashboard", element: <ArtistDashboard />},
+    { path: "/client-dashboard", element: <ClientDashboard /> }
   ]);
 
 

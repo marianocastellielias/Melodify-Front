@@ -100,6 +100,7 @@ const AlbumManagement = () => {
                             Canciones:
                             {album.songs.map((song) => (
                                 <div key={song.id}>
+                                    <h6>id: {song.id}</h6>
                                     <h6>{song.title}</h6>
                                     <h6>
                                         {song.duration.minute}:{song.duration.second}

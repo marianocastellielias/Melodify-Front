@@ -8,6 +8,7 @@ import ClientDashboard from './components/pages/clientPages/home/ClientDashboard
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AlbumManagement from './components/pages/adminPages/albumManagement/AlbumManagement';
 import UserManagement from './components/pages/adminPages/userManagement/UserManagement';
+import MyCreations from './components/pages/artistPages/myCreations/MyCreations';
 
 function App() {
 
@@ -19,7 +20,8 @@ function App() {
     { path: "/admin/album-management", element: <AlbumManagement />},
     {path: "/admin/user-management", element: <UserManagement />},
     { path: "/artist-dashboard", element: <ArtistDashboard />},
-    { path: "/client-dashboard", element: <ClientDashboard /> }
+    { path: "/client-dashboard", element: <ClientDashboard /> },
+    {path: "/artist/my-creations", element: <MyCreations />}
   ]);
 
 

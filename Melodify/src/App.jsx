@@ -9,6 +9,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AlbumManagement from './components/pages/adminPages/albumManagement/AlbumManagement';
 import UserManagement from './components/pages/adminPages/userManagement/UserManagement';
 import MyCreations from './components/pages/artistPages/myCreations/MyCreations';
+import MyCart from './components/pages/clientPages/MyCart/MyCart';
+import MyMusic from './components/pages/clientPages/myMusic/MyMusic';
+import ProfileSettings from './components/pages/clientPages/ProfileSettings/ProfileSettings';
 
 function App() {
 
@@ -21,7 +24,10 @@ function App() {
     {path: "/admin/user-management", element: <UserManagement />},
     { path: "/artist-dashboard", element: <ArtistDashboard />},
     { path: "/client-dashboard", element: <ClientDashboard /> },
-    {path: "/artist/my-creations", element: <MyCreations />}
+    {path: "/artist/my-creations", element: <MyCreations />},
+    {path: "/client/my-cart", element: <MyCart />},
+    {path: "/client/my-music", element: <MyMusic />},
+    {path:"/client/profile-settings", element: <ProfileSettings />}
   ]);
 
 

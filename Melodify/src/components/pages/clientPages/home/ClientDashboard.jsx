@@ -1,19 +1,13 @@
-import { useContext } from "react";
-import { AuthenticationContext } from "../../../services/authentication/AuthenticationContext";
-import { useNavigate } from "react-router-dom";
+import AlbumsList from "../../../albumList/AlbumList";
+import Navbar from "../../../navbar/Navbar";
 
 const ClientDashboard = () => {
-    const { handleLogout } = useContext(AuthenticationContext);
-    const navigate = useNavigate();
 
-    const logoutHandler = () => {
-        handleLogout();
-        navigate("/login"); 
-    };
     return(
     <div>
+      <Navbar showLogout= {true} showMyCart = {true} showMyMusic={true} showSettings={true}/>
       <h1>Ha iniciado sesión Cliente</h1>  
-      <button onClick={logoutHandler}>Cerrar Sesión</button>
+      <AlbumsList />
     </div>
 )
 }

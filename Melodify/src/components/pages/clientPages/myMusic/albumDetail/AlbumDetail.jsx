@@ -1,15 +1,28 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom"; // Para navegar a otras rutas
-import Navbar from "../../../navbar/Navbar";
-import useNotifications from "../../../../hooks/useNotifications";
+import { useNavigate, useParams } from "react-router-dom"; 
+import Navbar from "../../../../navbar/Navbar";
+import useNotifications from "../../../../../hooks/useNotifications";
 
-const MyMusic = () => {
+const AlbumDetails = () => {
+  const { albumId } = useParams(); 
+  const [albumDetails, setAlbumDetails] = useState(null);
   const [albums, setAlbums] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const { notification, showNotification } = useNotifications();
   const navigate = useNavigate(); 
+
+
+  const getAlbumDetails = useCallback((albumId) => {
+
+    const albumFound = albums
+      .flatMap((purchase) => purchase.albumsCart)  
+      .find((albumCartItem) => albumCartItem.album.id === parseInt(albumId)); 
+
+    return albumFound ? albumFound.album : null; 
+  }, [albums]);
+
 
   const fetchMyAlbums = useCallback(async () => {
     const token = localStorage.getItem("bookchampions-token");
@@ -37,12 +50,22 @@ const MyMusic = () => {
     }
   }, [showNotification]);
 
+
   useEffect(() => {
     fetchMyAlbums();
   }, [fetchMyAlbums]);
 
+
+  useEffect(() => {
+    if (albums.length > 0 && albumId) {
+      const album = getAlbumDetails(albumId);
+      setAlbumDetails(album); 
+    }
+  }, [albums, albumId, getAlbumDetails]); 
+
+
   if (loading) {
-    return <p>Cargando álbumes...</p>;
+    return <p>Cargando detalles del álbum...</p>;
   }
 
   if (error) {
@@ -50,12 +73,16 @@ const MyMusic = () => {
   }
 
 
-  const goToAlbumDetail = (albumId) => {
-    navigate(`/client/my-music/album/${albumId}`); 
+  if (!albumDetails) {
+    return <p>Álbum no encontrado.</p>;
+  }
+
+  const goBackToAlbums = () => {
+    navigate("/client/my-music");
   };
 
   return (
-    <div className="albums-container">
+    <div className="album-details-container">
       <Navbar showHome={true} showMyCart={true} showLogout={true} showSettings={true} />
       {notification && (
         <div
@@ -72,22 +99,26 @@ const MyMusic = () => {
           {notification.message}
         </div>
       )}
-      {albums.length === 0 ? (
-        <p>No hay álbumes comprados.</p>
-      ) : (
-        albums.map((purchase) =>
-          purchase.albumsCart.map((albumCartItem) => (
-            <div key={albumCartItem.album.id} className="album-item">
-              <h3>{albumCartItem.album.title}</h3> 
-              <button onClick={() => goToAlbumDetail(albumCartItem.album.id)}>
-                Ver detalles
-              </button>
+      <h2>{albumDetails.title}</h2>
+      <p><strong>Artista:</strong> {albumDetails.artist}</p>
+      <p><strong>Género:</strong> {albumDetails.genre}</p>
+      <p><strong>Fecha de lanzamiento:</strong> {new Date(albumDetails.releaseDate).toLocaleDateString()}</p>
+      <div>
+        <h3>Canciones:</h3>
+        {albumDetails.songs.length > 0 ? (
+          albumDetails.songs.map((song) => (
+            <div key={song.id}>
+              <h4>{song.title}</h4>
+              <p>Duración: {song.duration.minute}:{song.duration.second}</p>
             </div>
           ))
-        )
-      )}
+        ) : (
+          <p>No hay canciones disponibles</p>
+        )}
+      </div>
+      <button onClick={goBackToAlbums}>Volver a la lista de álbumes</button> 
     </div>
   );
 };
 
-export default MyMusic;
+export default AlbumDetails;

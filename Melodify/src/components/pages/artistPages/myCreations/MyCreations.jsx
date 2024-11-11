@@ -9,8 +9,8 @@ const MyCreations = () => {
         title: "",
         artist: "",
         genre: "",
-        cover: "",
-        stock: "",
+        cover: "https://st.depositphotos.com/1766887/1279/i/450/depositphotos_12798148-stock-photo-grunge-musical-background.jpg",
+        stock: "100",
         price: ""
     });
     const [newMusic, setNewMusic] = useState({
@@ -67,7 +67,7 @@ const MyCreations = () => {
                 throw new Error("Error al crear el álbum.");
             }
 
-            setNewAlbum({ title: "", artist: "", genre: "", cover: "", stock: "", price: "" });
+            setNewAlbum({ title: "", artist: "", genre: "", cover: "https://st.depositphotos.com/1766887/1279/i/450/depositphotos_12798148-stock-photo-grunge-musical-background.jpg", stock: "100", price: "" });
             await fetchMyAlbums();
             showNotification("Álbum creado exitosamente", "success"); 
         } catch (err) {
@@ -206,12 +206,10 @@ const MyCreations = () => {
                 </div>
             )}
             <form onSubmit={(e) => { e.preventDefault(); createAlbum(); }}>
-                <input type="text" placeholder="Title" value={newAlbum.title} onChange={(e) => setNewAlbum({ ...newAlbum, title: e.target.value })} required />
-                <input type="text" placeholder="Artist" value={newAlbum.artist} onChange={(e) => setNewAlbum({ ...newAlbum, artist: e.target.value })} required />
-                <input type="text" placeholder="Genre" value={newAlbum.genre} onChange={(e) => setNewAlbum({ ...newAlbum, genre: e.target.value })} />
-                <input type="text" placeholder="Cover" value={newAlbum.cover} onChange={(e) => setNewAlbum({ ...newAlbum, cover: e.target.value })} />
-                <input type="number" placeholder="Stock" value={newAlbum.stock} onChange={(e) => setNewAlbum({ ...newAlbum, stock: e.target.value })} required />
-                <input type="number" placeholder="Price" value={newAlbum.price} onChange={(e) => setNewAlbum({ ...newAlbum, price: e.target.value })} required />
+                <input type="text" placeholder="Título" value={newAlbum.title} onChange={(e) => setNewAlbum({ ...newAlbum, title: e.target.value })} required />
+                <input type="text" placeholder="Artista" value={newAlbum.artist} onChange={(e) => setNewAlbum({ ...newAlbum, artist: e.target.value })} required />
+                <input type="text" placeholder="Género" value={newAlbum.genre} onChange={(e) => setNewAlbum({ ...newAlbum, genre: e.target.value })} />
+                <input type="number" placeholder="Precio" value={newAlbum.price} onChange={(e) => setNewAlbum({ ...newAlbum, price: e.target.value })} required />
                 <button type="submit">Crear Álbum</button>
             </form>
 
@@ -222,15 +220,15 @@ const MyCreations = () => {
                     albums.map((album) => (
                         <div key={album.id} className="album-item">
                             <h3>{album.title}</h3>
-                            <p>{album.artist}</p>
+                            <p>Artista {album.artist}</p>
                             <p>Estado: {album.state}</p>
-                            <p>{new Date(album.releaseDate).toLocaleDateString()}</p>
-                            <p>{album.genre}</p>
+                            <p>Fecha de lanzamiento: {new Date(album.releaseDate).toLocaleDateString()}</p>
+                            <p>Género: {album.genre}</p>
                             <p>${album.price}</p>
                             <p>Canciones: {album.songs.map((song) => (
                                 <div key={song.id}>
                                     <h6>{song.title}</h6>
-                                    <h6>{song.duration.minute}:{song.duration.second}</h6>
+                                    <h6>Duración {song.duration.minute}:{song.duration.second}</h6>
                                     <button type="button" onClick={() => deleteMusic(song.id)}>Eliminar Canción</button>
                                     <hr />
                                 </div>
@@ -241,8 +239,8 @@ const MyCreations = () => {
                             <form onSubmit={(e) => { e.preventDefault(); addMusic(album.id); }}>
                                 <h4>Agregar Música</h4>
                                 <input type="text" placeholder="Título" value={newMusic.title} onChange={(e) => setNewMusic({ ...newMusic, title: e.target.value })} required />
-                                <input type="number" placeholder="Minuto" value={newMusic.minute} onChange={(e) => setNewMusic({ ...newMusic, minute: e.target.value })} required />
-                                <input type="number" placeholder="Segundo" value={newMusic.second} onChange={(e) => setNewMusic({ ...newMusic, second: e.target.value })} required />
+                                <input type="number" placeholder="Minutos" value={newMusic.minute} onChange={(e) => setNewMusic({ ...newMusic, minute: e.target.value })} required />
+                                <input type="number" placeholder="Segundos" value={newMusic.second} onChange={(e) => setNewMusic({ ...newMusic, second: e.target.value })} required />
                                 <button type="submit">Agregar Música</button>
                             </form>
                         </div>
@@ -253,11 +251,9 @@ const MyCreations = () => {
             {selectedAlbum && (
                 <form onSubmit={(e) => { e.preventDefault(); updateAlbum(selectedAlbum.id); }}>
                     <h3>Editando: {selectedAlbum.title}</h3>
-                    <input type="text" placeholder="Title" value={selectedAlbum.title} onChange={handleInputChange} name="title" />
-                    <input type="text" placeholder="Artist" value={selectedAlbum.artist} onChange={handleInputChange} name="artist" />
-                    <input type="text" placeholder="Genre" value={selectedAlbum.genre} onChange={handleInputChange} name="genre" />
-                    <input type="text" placeholder="Cover" value={selectedAlbum.cover} onChange={handleInputChange} name="cover" />
-                    <input type="number" placeholder="Stock" value={selectedAlbum.stock} onChange={handleInputChange} name="stock" />
+                    <input type="text" placeholder="Título" value={selectedAlbum.title} onChange={handleInputChange} name="title" />
+                    <input type="text" placeholder="Artista" value={selectedAlbum.artist} onChange={handleInputChange} name="artist" />
+                    <input type="text" placeholder="Género" value={selectedAlbum.genre} onChange={handleInputChange} name="genre" />
                     <input type="number" placeholder="Price" value={selectedAlbum.price} onChange={handleInputChange} name="price" />
                     <button type="submit">Guardar Cambios</button>
                 </form>

@@ -86,14 +86,14 @@ const AlbumsList = () => {
                     albums.map((album) => (
                         <div key={album.id} className="album-item">
                             <h3>{album.title}</h3>
-                            <p>{album.artist}</p>
-                            <p>{new Date(album.releaseDate).toLocaleDateString()}</p>
-                            <p>{album.genre}</p>
+                            <p>Artista: {album.artist}</p>
+                            <p>Fecha de lanzamiento: {new Date(album.releaseDate).toLocaleDateString()}</p>
+                            <p>Género: {album.genre}</p>
                             <p>${album.price}</p>
                             <p>Canciones: {album.songs.map((song) => (
                                 <div key={song.id}>
                                     <h6>{song.title}</h6>
-                                    <h6>{song.duration.minute}:{song.duration.second}</h6>
+                                    <h6>Duración: {song.duration.minute}:{song.duration.second}</h6>
                                     <hr />
                                 </div>
                             ))}</p>

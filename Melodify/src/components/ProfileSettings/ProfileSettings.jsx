@@ -1,5 +1,5 @@
-import Navbar from "../../../navbar/Navbar";
-import useNotifications from "../../../../hooks/useNotifications";
+import Navbar from "../navbar/Navbar";
+import useNotifications from "../../hooks/useNotifications";
 import { useState } from "react";
 
 

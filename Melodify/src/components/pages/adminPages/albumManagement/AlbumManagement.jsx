@@ -83,11 +83,12 @@ const AlbumManagement = () => {
                 <div className="albums-container">
                     {albums.map((album) => (
                         <div key={album.id} className="album-item">
+                            <h3>Id: {album.id}</h3>
                             <h3>Estado: {album.state}</h3>
                             <h3>{album.title}</h3>
-                            <p>{album.artist}</p>
-                            <p>{new Date(album.releaseDate).toLocaleDateString()}</p>
-                            <p>{album.genre}</p>
+                            <p>Artista: {album.artist}</p>
+                            <p>Fecha de lanzamiento: {new Date(album.releaseDate).toLocaleDateString()}</p>
+                            <p>Género: {album.genre}</p>
                             <p>${album.price}</p>
                             <p>
                                 Canciones:
@@ -96,7 +97,7 @@ const AlbumManagement = () => {
                                         <h6>id: {song.id}</h6>
                                         <h6>{song.title}</h6>
                                         <h6>
-                                            {song.duration.minute}:{song.duration.second}
+                                        Duración: {song.duration.minute}:{song.duration.second}
                                         </h6>
                                     </div>
                                 ))}

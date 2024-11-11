@@ -203,9 +203,9 @@ const UserManagement = () => {
                         .map((u) => (
                             <div key={u.id} className="user-item">
                                 <h3>Rol: {u.role}</h3>
-                                <h3>{u.name}</h3>
-                                <p>{u.email}</p>
-                                <p>{u.phone}</p>
+                                <h3>Nombre: {u.name}</h3>
+                                <p>Mail: {u.email}</p>
+                                <p>Teléfono: {u.phone}</p>
                                 <p>Id: {u.id}</p>
                                 <div>
                                     <p>Cambiar rol del usuario:</p>

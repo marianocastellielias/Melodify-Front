@@ -1,0 +1,49 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+}
+
+.icono {
+    font-size: 32px;
+    color: #f8d247;
+    cursor: pointer;
+}
+
+.buttonsDiv {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    max-width: 100%;
+    overflow-x: auto;
+    justify-content: flex-end;
+    flex-grow: 1;
+}
+
+.buttonsDiv button {
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    font-size: 16px;
+}
+
+.buttonsDiv button:hover {
+    background-color: white;
+    color: #333;
+}
+
+body {
+    margin-top: 60px; /* Ajusta esta altura según la altura de tu navbar */
+}

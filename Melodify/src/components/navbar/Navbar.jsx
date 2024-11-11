@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthenticationContext } from "../services/authentication/AuthenticationContext";
 import PropTypes from 'prop-types';
+import './Navbar.css';
+import { FaMusic } from "react-icons/fa";
 
 const Navbar = ({ showHome, showUserManagement, showAlbumManagement, showLogout, showLogin, showRegister, showMyCreations, showMyCart, showMyMusic, showSettings }) => {
     const { handleLogout, user } = useContext(AuthenticationContext);
@@ -33,6 +35,8 @@ const Navbar = ({ showHome, showUserManagement, showAlbumManagement, showLogout,
     
     return (
         <nav className="navbar">
+            <FaMusic className="icono" />
+            <div className="buttonsDiv">
             {showHome && <button onClick={goToDashboard}>Home</button>}
             {showUserManagement && <button onClick={() => navigate("/admin/user-management")}>User Management</button>}
             {showAlbumManagement && <button onClick={() => navigate("/admin/album-management")}>Album Management</button>}
@@ -43,6 +47,7 @@ const Navbar = ({ showHome, showUserManagement, showAlbumManagement, showLogout,
             {showMyCart && <button onClick={() => navigate("/client/my-cart")}>Mi Carrito</button>}
             {showMyMusic && <button onClick={() => navigate("/client/my-music")}>Mi Música</button>}
             {showSettings && <button onClick={() => navigate("/user/profile-settings")}>Configuración</button>}
+            </div>
 
         </nav>
     );

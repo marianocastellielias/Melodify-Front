@@ -1,12 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Navbar from "../../../navbar/Navbar";
+import useNotifications from "../../../../hooks/useNotifications";
+
 
 const MyMusic = () => {
     const [albums, setAlbums] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const fetchMyAlbums = async () => {
+    const { notification, showNotification } = useNotifications();
+
+    
+    const fetchMyAlbums = useCallback(async () => {
         const token = localStorage.getItem("bookchampions-token");
 
         try {
@@ -21,18 +26,20 @@ const MyMusic = () => {
             if (!response.ok) {
                 throw new Error("No se pudieron cargar los álbumes");
             }
+
             const data = await response.json();
             setAlbums(data);
             setLoading(false);
         } catch (err) {
             setError(err.message);
             setLoading(false);
+            showNotification("Error al cargar los álbumes", "error"); 
         }
-    };
+    }, [showNotification]);
 
     useEffect(() => {
-        fetchMyAlbums();
-    }, []);
+        fetchMyAlbums();  
+    }, [fetchMyAlbums]);  
 
     if (loading) {
         return <p>Cargando álbumes...</p>;
@@ -44,7 +51,22 @@ const MyMusic = () => {
 
     return (
         <div className="albums-container">
-        <Navbar showHome = {true} showMyCart={true} showLogout={true} showSettings={true}/>
+            <Navbar showHome={true} showMyCart={true} showLogout={true} showSettings={true} />
+            {notification && (
+                <div
+                    style={{
+                        color: notification.type === "success" ? "green" : "red",
+                        backgroundColor: notification.type === "success" ? "#d4edda" : "#f8d7da",
+                        padding: "10px",
+                        borderRadius: "5px",
+                        marginBottom: "20px",
+                        textAlign: "center",
+                        fontWeight: "bold",
+                    }}
+                >
+                    {notification.message}
+                </div>
+            )}
             {albums.length === 0 ? (
                 <p>No hay álbumes comprados.</p>
             ) : (
@@ -75,6 +97,6 @@ const MyMusic = () => {
             )}
         </div>
     );
-}
+};
 
 export default MyMusic;

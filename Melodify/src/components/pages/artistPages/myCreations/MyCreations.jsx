@@ -1,10 +1,10 @@
 import Navbar from "../../../navbar/Navbar";
 import { useEffect, useState } from "react";
+import useNotifications from "../../../../hooks/useNotifications";
 
 const MyCreations = () => {
     const [albums, setAlbums] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [newAlbum, setNewAlbum] = useState({
         title: "",
         artist: "",
@@ -19,6 +19,8 @@ const MyCreations = () => {
         second: ""
     });
     const [selectedAlbum, setSelectedAlbum] = useState(null);
+
+    const { notification, showNotification } = useNotifications(); 
 
     const fetchMyAlbums = async () => {
         const token = localStorage.getItem("bookchampions-token");
@@ -39,7 +41,7 @@ const MyCreations = () => {
             setAlbums(data);
             setLoading(false);
         } catch (err) {
-            setError(err.message);
+            console.log(err);
             setLoading(false);
         }
     };
@@ -67,8 +69,10 @@ const MyCreations = () => {
 
             setNewAlbum({ title: "", artist: "", genre: "", cover: "", stock: "", price: "" });
             await fetchMyAlbums();
+            showNotification("Álbum creado exitosamente", "success"); 
         } catch (err) {
-            setError(err.message);
+            console.log(err)
+            showNotification("Error al crear el álbum.", "error");  
         }
     };
 
@@ -91,8 +95,10 @@ const MyCreations = () => {
 
             setSelectedAlbum(null);
             await fetchMyAlbums();
+            showNotification("Álbum actualizado exitosamente", "success"); 
         } catch (err) {
-            setError(err.message);
+            console.log(err);
+            showNotification("Error al actualizar el álbum.", "error");  
         }
     };
 
@@ -108,11 +114,12 @@ const MyCreations = () => {
                 throw new Error("Error al eliminar el álbum.");
             }
             await fetchMyAlbums();
+            showNotification("Álbum eliminado exitosamente", "success");  
         } catch (err) {
-            setError(err.message);
+            console.log(err);
+            showNotification("Error al eliminar el álbum.", "error"); 
         }
     };
-
 
     const addMusic = async (albumId) => {
         const token = localStorage.getItem("bookchampions-token");
@@ -133,11 +140,12 @@ const MyCreations = () => {
 
             setNewMusic({ title: "", minute: "", second: "" });
             await fetchMyAlbums();
+            showNotification("Música agregada exitosamente", "success"); 
         } catch (err) {
-            setError(err.message);
+            console.log(err);
+            showNotification("Error al agregar la música.", "error");  
         }
     };
-
 
     const deleteMusic = async (musicId) => {
         const token = localStorage.getItem("bookchampions-token");
@@ -156,8 +164,10 @@ const MyCreations = () => {
             }
 
             await fetchMyAlbums();
+            showNotification("Música eliminada exitosamente", "success"); 
         } catch (err) {
-            setError(err.message);
+            console.log(err)
+            showNotification("Error al eliminar la música.", "error");
         }
     };
 
@@ -165,9 +175,6 @@ const MyCreations = () => {
         return <p>Cargando álbumes...</p>;
     }
 
-    if (error) {
-        return <p style={{ color: "red" }}>{error}</p>;
-    }
 
     const handleEditClick = (album) => {
         setSelectedAlbum(album);
@@ -181,6 +188,23 @@ const MyCreations = () => {
     return (
         <>
             <Navbar showHome={true} showLogout={true}/>
+            {notification && (
+                <div style={{
+                    color: notification.type === "success" ? "green" :
+                           notification.type === "error" ? "red" :
+                           notification.type === "warning" ? "orange" : "black",
+                    backgroundColor: notification.type === "success" ? "#d4edda" :
+                                     notification.type === "error" ? "#f8d7da" :
+                                     notification.type === "warning" ? "#fff3cd" : "#e2e3e5",
+                    padding: "10px",
+                    borderRadius: "5px",
+                    marginBottom: "20px",
+                    textAlign: "center",
+                    fontWeight: "bold"
+                }}>
+                    {notification.message}
+                </div>
+            )}
             <form onSubmit={(e) => { e.preventDefault(); createAlbum(); }}>
                 <input type="text" placeholder="Title" value={newAlbum.title} onChange={(e) => setNewAlbum({ ...newAlbum, title: e.target.value })} required />
                 <input type="text" placeholder="Artist" value={newAlbum.artist} onChange={(e) => setNewAlbum({ ...newAlbum, artist: e.target.value })} required />
@@ -203,17 +227,17 @@ const MyCreations = () => {
                             <p>{new Date(album.releaseDate).toLocaleDateString()}</p>
                             <p>{album.genre}</p>
                             <p>${album.price}</p>
-                            <p>Canciones: {album.songs.map((song)=>(
+                            <p>Canciones: {album.songs.map((song) => (
                                 <div key={song.id}>
                                     <h6>{song.title}</h6>
                                     <h6>{song.duration.minute}:{song.duration.second}</h6>
                                     <button type="button" onClick={() => deleteMusic(song.id)}>Eliminar Canción</button>
-                                    <hr></hr>
-                                </div>))} </p>
+                                    <hr />
+                                </div>
+                            ))}</p>
                             <button onClick={() => deleteAlbum(album.id)}>Eliminar Álbum</button>
                             <button onClick={() => handleEditClick(album)}>Actualizar Álbum</button>
 
-                            
                             <form onSubmit={(e) => { e.preventDefault(); addMusic(album.id); }}>
                                 <h4>Agregar Música</h4>
                                 <input type="text" placeholder="Título" value={newMusic.title} onChange={(e) => setNewMusic({ ...newMusic, title: e.target.value })} required />
@@ -221,8 +245,6 @@ const MyCreations = () => {
                                 <input type="number" placeholder="Segundo" value={newMusic.second} onChange={(e) => setNewMusic({ ...newMusic, second: e.target.value })} required />
                                 <button type="submit">Agregar Música</button>
                             </form>
-
-                            
                         </div>
                     ))
                 )}
@@ -231,17 +253,15 @@ const MyCreations = () => {
             {selectedAlbum && (
                 <form onSubmit={(e) => { e.preventDefault(); updateAlbum(selectedAlbum.id); }}>
                     <h3>Editando: {selectedAlbum.title}</h3>
-                    <input type="text" name="title" placeholder="Title" value={selectedAlbum.title} onChange={handleInputChange} required />
-                    <input type="text" name="artist" placeholder="Artist" value={selectedAlbum.artist} onChange={handleInputChange} required />
-                    <input type="text" name="genre" placeholder="Genre" value={selectedAlbum.genre} onChange={handleInputChange} />
-                    <input type="text" name="cover" placeholder="Cover" value={selectedAlbum.cover} onChange={handleInputChange} />
-                    <input type="number" name="stock" placeholder="Stock" value={selectedAlbum.stock} onChange={handleInputChange} required />
-                    <input type="number" name="price" placeholder="Price" value={selectedAlbum.price} onChange={handleInputChange} required />
+                    <input type="text" placeholder="Title" value={selectedAlbum.title} onChange={handleInputChange} name="title" />
+                    <input type="text" placeholder="Artist" value={selectedAlbum.artist} onChange={handleInputChange} name="artist" />
+                    <input type="text" placeholder="Genre" value={selectedAlbum.genre} onChange={handleInputChange} name="genre" />
+                    <input type="text" placeholder="Cover" value={selectedAlbum.cover} onChange={handleInputChange} name="cover" />
+                    <input type="number" placeholder="Stock" value={selectedAlbum.stock} onChange={handleInputChange} name="stock" />
+                    <input type="number" placeholder="Price" value={selectedAlbum.price} onChange={handleInputChange} name="price" />
                     <button type="submit">Guardar Cambios</button>
-                    <button type="button" onClick={() => setSelectedAlbum(null)}>Cancelar</button>
                 </form>
             )}
-
         </>
     );
 };

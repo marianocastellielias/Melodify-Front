@@ -5,7 +5,7 @@ const ArtistDashboard = () => {
 
     return(
     <div>
-      <Navbar showLogout= {true} showMyCreations={true}/>
+      <Navbar showLogout= {true} showMyCreations={true} showSettings = {true}/>
       <h1>Ha iniciado sesión Artista</h1>  
       <AlbumsList />
     </div>

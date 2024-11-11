@@ -1,14 +1,15 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
 import { AuthenticationContext } from "../services/authentication/AuthenticationContext";
+import useNotifications from "../../hooks/useNotifications";
 
 const AlbumsList = () => {
     const [albums, setAlbums] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [successMessage, setSuccessMessage] = useState(null);
     const { user } = useContext(AuthenticationContext);
+    const { notification, showNotification } = useNotifications();  
 
-    const fetchAlbums = async () => {
+
+    const fetchAlbums = useCallback(async () => {
         try {
             const response = await fetch("https://localhost:7014/api/Albums");
             if (!response.ok) {
@@ -18,15 +19,13 @@ const AlbumsList = () => {
             setAlbums(data);
             setLoading(false);
         } catch (err) {
-            setError(err.message);
+            showNotification(err.message, "error");  
             setLoading(false);
-            setTimeout(() => setError(null), 2000);  
         }
-    };
-
+    }, [showNotification]); 
     useEffect(() => {
         fetchAlbums();
-    }, []);
+    }, [fetchAlbums]); 
 
     const addToCart = async (albumId) => {
         const token = localStorage.getItem("bookchampions-token");
@@ -46,13 +45,10 @@ const AlbumsList = () => {
                 throw new Error(errorData.message || "Error al agregar al carrito");
             }
 
-           
-            setSuccessMessage("Álbum agregado al carrito exitosamente.");
-            setTimeout(() => setSuccessMessage(null), 2000); 
+            showNotification("Álbum agregado al carrito exitosamente.", "success");  
 
         } catch (err) {
-            setError(err.message);
-            setTimeout(() => setError(null), 2000);  
+            showNotification(err.message, "error"); 
         }
     };
 
@@ -64,33 +60,22 @@ const AlbumsList = () => {
         <div className="albums-list">
             <h2>Álbumes Disponibles</h2>
 
-
-            {error && (
+           
+            {notification && (
                 <div style={{
-                    color: "red",
-                    backgroundColor: "#f8d7da",
+                    color: notification.type === "success" ? "green" :
+                           notification.type === "error" ? "red" :
+                           notification.type === "warning" ? "orange" : "black",
+                    backgroundColor: notification.type === "success" ? "#d4edda" :
+                                     notification.type === "error" ? "#f8d7da" :
+                                     notification.type === "warning" ? "#fff3cd" : "#e2e3e5",
                     padding: "10px",
                     borderRadius: "5px",
                     marginBottom: "20px",
                     textAlign: "center",
                     fontWeight: "bold"
                 }}>
-                    {error}
-                </div>
-            )}
-
-
-            {successMessage && (
-                <div style={{
-                    color: "green",
-                    backgroundColor: "#d4edda",
-                    padding: "10px",
-                    borderRadius: "5px",
-                    marginBottom: "20px",
-                    textAlign: "center",
-                    fontWeight: "bold"
-                }}>
-                    {successMessage}
+                    {notification.message}
                 </div>
             )}
 
@@ -113,9 +98,7 @@ const AlbumsList = () => {
                                 </div>
                             ))}</p>
                             {user?.role === "Client" && (
-                                <button 
-                                    onClick={() => addToCart(album.id)} 
-                                >
+                                <button onClick={() => addToCart(album.id)}>
                                     Añadir al carrito
                                 </button>
                             )}

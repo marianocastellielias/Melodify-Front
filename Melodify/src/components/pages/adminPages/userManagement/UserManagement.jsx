@@ -1,11 +1,11 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
 import { AuthenticationContext } from "../../../services/authentication/AuthenticationContext";
 import Navbar from "../../../navbar/Navbar";
+import useNotifications from "../../../../hooks/useNotifications";
 
 const UserManagement = () => {
     const { user } = useContext(AuthenticationContext);
     const [users, setUsers] = useState([]);
-    const [error, setError] = useState(null);
     const [newUser, setNewUser] = useState({
         name: "",
         email: "",
@@ -13,10 +13,10 @@ const UserManagement = () => {
         phone: "",
         password: ""
     });
+    const { notification, showNotification } = useNotifications();
 
-
-
-    const fetchUsers = async () => {
+   
+    const fetchUsers = useCallback(async () => {
         const token = localStorage.getItem("bookchampions-token");
 
         try {
@@ -35,15 +35,15 @@ const UserManagement = () => {
             const data = await response.json();
             setUsers(data);
         } catch (err) {
-            setError(err.message);
+            showNotification(err.message, "error");
         }
-    };
+    }, [showNotification]); 
 
     useEffect(() => {
         if (user) {
             fetchUsers();
         }
-    }, [user]);
+    }, [user, fetchUsers]); 
 
     const nameHandler = (event) => {
         setNewUser((prev) => ({ ...prev, name: event.target.value }));
@@ -84,11 +84,12 @@ const UserManagement = () => {
 
             setNewUser({ name: "", email: "", address: "", phone: "", password: "" });
             await fetchUsers();
+            showNotification("Usuario creado con éxito", "success"); 
         } catch (err) {
-            setError(err.message);
+ 
+            showNotification(err.message, "error");
         }
     };
-
 
     const updateUserRole = async (id, newRole) => {
         try {
@@ -100,16 +101,21 @@ const UserManagement = () => {
                 },
                 body: JSON.stringify({ role: newRole })
             });
-
+    
+            const data = await response.json(); 
+    
             if (!response.ok) {
-                throw new Error("Error al cambiar el rol del usuario");
+                throw new Error(data.message || "Error al cambiar el rol del usuario");
             }
-
+    
+            showNotification(data.message || "Rol actualizado con éxito", "success");
             await fetchUsers();
         } catch (err) {
-            setError(err.message);
+       
+            showNotification(err.message, "error");
         }
     };
+    
 
     const deleteUser = async (id) => {
         try {
@@ -119,23 +125,25 @@ const UserManagement = () => {
                     Authorization: `Bearer ${localStorage.getItem("bookchampions-token")}`
                 }
             });
+
             if (!response.ok) {
                 throw new Error("Error al eliminar el usuario.");
             }
             await fetchUsers();
+            showNotification("Usuario eliminado con éxito", "success"); 
         } catch (err) {
-            setError(err.message);
+
+            showNotification(err.message, "error");
         }
     };
 
-
-    if (error) {
-        return <p style={{ color: "red" }}>{error}</p>;
-    }
+ 
 
     return (
         <div className="user-management">
-            <Navbar showHome = {true} showAlbumManagement = {true} showLogout = {true} />
+            <Navbar showHome={true} showAlbumManagement={true} showLogout={true} />
+
+            
 
             <form onSubmit={(e) => { e.preventDefault(); createUser(); }}>
                 <input
@@ -173,10 +181,23 @@ const UserManagement = () => {
                 />
                 <button type="submit">Crear Usuario</button>
             </form>
+
+            {notification && ( 
+                    <div style={{
+                        color: notification.type === "success" ? "green" : "red",
+                        backgroundColor: notification.type === "success" ? "#d4edda" : "#f8d7da",
+                        padding: "10px",
+                        borderRadius: "5px",
+                        marginBottom: "20px",
+                        textAlign: "center",
+                        fontWeight: "bold"
+                    }}>
+                        {notification.message}
+                    </div>
+                )}
             <div className="users-list">
                 <h2>Usuarios</h2>
                 <div className="user-container">
-
                     {users
                         .filter((u) => (u.name !== user.name))
                         .map((u) => (
@@ -193,10 +214,8 @@ const UserManagement = () => {
                                     <button onClick={() => deleteUser(u.id)}>Eliminar usuario</button>
                                 </div>
                                 <hr />
-
                             </div>
                         ))}
-
                 </div>
             </div>
         </div>

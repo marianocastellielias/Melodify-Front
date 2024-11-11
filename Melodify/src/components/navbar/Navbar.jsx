@@ -42,7 +42,7 @@ const Navbar = ({ showHome, showUserManagement, showAlbumManagement, showLogout,
             {showMyCreations && <button onClick={() => navigate("/artist/my-creations")}>Mis Creaciones</button>}
             {showMyCart && <button onClick={() => navigate("/client/my-cart")}>Mi Carrito</button>}
             {showMyMusic && <button onClick={() => navigate("/client/my-music")}>Mi Música</button>}
-            {showSettings && <button onClick={() => navigate("/client/profile-settings")}>Configuración</button>}
+            {showSettings && <button onClick={() => navigate("/user/profile-settings")}>Configuración</button>}
 
         </nav>
     );

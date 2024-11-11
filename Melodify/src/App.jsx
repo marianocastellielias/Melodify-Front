@@ -27,7 +27,7 @@ function App() {
     {path: "/artist/my-creations", element: <MyCreations />},
     {path: "/client/my-cart", element: <MyCart />},
     {path: "/client/my-music", element: <MyMusic />},
-    {path:"/client/profile-settings", element: <ProfileSettings />}
+    {path:"/user/profile-settings", element: <ProfileSettings />}
   ]);
 
 
